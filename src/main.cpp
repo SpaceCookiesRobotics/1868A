@@ -10,11 +10,13 @@
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
-// FrontLeft            motor         2               
-// FrontRight           motor         8               
-// BackLeft             motor         3               
-// BackRight            motor         9               
+// FrontLeft            motor         1               
+// FrontRight           motor         3               
+// BackLeft             motor         2               
+// BackRight            motor         4               
 // Controller1          controller                    
+// Rollers              motor         11              
+// Intake               motor         12              
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
@@ -89,12 +91,29 @@ void driverControl() {
     BackRight.stop(hold);
     
   } else {
-    FrontLeft.spin(forward, forwardVal + sidewaysVal + turnVal, percent);
-    FrontRight.spin(forward, forwardVal - sidewaysVal - turnVal, percent);
-    BackLeft.spin(forward, forwardVal - sidewaysVal + turnVal, percent);
-    BackRight.spin(forward, forwardVal + sidewaysVal - turnVal, percent);
+    FrontLeft.spin(forward, 0.75 * (forwardVal + sidewaysVal + turnVal), percent);
+    FrontRight.spin(forward, 0.75 * (forwardVal - sidewaysVal - turnVal), percent);
+    BackLeft.spin(forward, 0.75 * (forwardVal - sidewaysVal + turnVal), percent);
+    BackRight.spin(forward, 0.75 * (forwardVal + sidewaysVal - turnVal), percent);
     // 12/08 negated turnVal because axis 1 was coded backwards. hope it works lol
     // update ehehe it works !!! i (julia) am so smart :D
+  }
+
+//roller motor movement
+  if (Controller1.ButtonB.pressing()) {
+    Rollers.spin(forward, 30, rpm);
+  } else if (Controller1.ButtonX.pressing()) {
+    Rollers.spin(reverse, 30, rpm);
+  } else {
+    Rollers.stop(hold);
+  }
+
+  if (Controller1.ButtonA.pressing()) {
+    Intake.spin(forward, 60, rpm);
+  } else if (Controller1.ButtonY.pressing()) {
+    Intake.spin(reverse, 60, rpm);
+  } else {
+    Intake.stop(hold);
   }
 
 }
