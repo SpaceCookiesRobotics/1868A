@@ -10,6 +10,8 @@ extern motor BackRight;
 extern controller Controller1;
 extern motor Rollers;
 extern motor Intake;
+extern motor FlywheelNonSparkly;
+extern motor FlywheelSparkly;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.

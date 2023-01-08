@@ -17,6 +17,8 @@
 // Controller1          controller                    
 // Rollers              motor         11              
 // Intake               motor         12              
+// FlywheelNonSparkly   motor         13              
+// FlywheelSparkly      motor         14              
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
 #include "vex.h"
@@ -72,6 +74,76 @@ void autonomous(void) {
 /*  You must modify the code to add your own robot specific commands here.   */
 /*---------------------------------------------------------------------------*/
 
+// ~~~~~~~~~~~~ helper functions below ~~~~~~~~~~~~
+
+int rollerSpeed = 30;
+int intakeSpeed = 200;
+int flywheelSpeed = 600; 
+
+void spinRollers() {
+  if (Controller1.ButtonB.pressing()) {
+    Rollers.spin(forward, rollerSpeed, rpm);
+  } else if (Controller1.ButtonX.pressing()) {
+    Rollers.spin(reverse, rollerSpeed, rpm);
+  } else {
+    Rollers.stop(hold);
+  }
+}
+
+// void spinIntakeAndRollers() {
+//     if (Controller1.ButtonA.pressing()) {
+//       Intake.spin(forward, intakeSpeed, rpm);
+//     } else if (Controller1.ButtonY.pressing()) {
+//       Intake.spin(reverse, intakeSpeed, rpm);
+//     } else if (Controller1.ButtonR1.pressing()) {
+//       FlywheelSparkly.spin(forward, flywheelSpeed, rpm);
+//       FlywheelNonSparkly.spin(forward, flywheelSpeed, rpm);
+//       Intake.spin(forward, intakeSpeed, rpm);
+//     } else {
+//       FlywheelSparkly.stop();
+//       FlywheelNonSparkly.stop();
+//       Intake.stop(hold);
+//     }
+// }
+
+bool spinFlywheel = false;
+
+void doSpinFlywheel() {
+  spinFlywheel = true;
+}
+void dontSpinFlywheel() {
+  spinFlywheel = false;
+}
+
+void spinIntakeAndRollers() {
+    if (Controller1.ButtonA.pressing()) {
+      Intake.spin(forward, intakeSpeed, rpm);
+    } else if (Controller1.ButtonY.pressing()) {
+      Intake.spin(reverse, intakeSpeed, rpm);
+    } else if (Controller1.ButtonR1.pressing()) {
+      Intake.spin(forward, intakeSpeed, rpm);
+    } else {
+      Intake.stop(hold);
+    }
+
+    Controller1.ButtonR1.pressed(doSpinFlywheel);
+    Controller1.ButtonR2.pressed(dontSpinFlywheel);
+}
+
+// void shootDisks() {
+//   if (Controller1.ButtonR1.pressing()) {
+//     FlywheelSparkly.spin(forward, flywheelSpeed, rpm);
+//     FlywheelNonSparkly.spin(forward, flywheelSpeed, rpm);
+//     Intake.spin(forward, intakeSpeed, rpm);
+
+//   } else {
+//     FlywheelSparkly.stop();
+//     FlywheelNonSparkly.stop();
+//     Intake.stop(hold);
+//   }
+// }
+
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 void driverControl() {
   // 4 motors: upper left (1), upper right (2), lower left (3), lower right (4)
@@ -99,23 +171,6 @@ void driverControl() {
     // update ehehe it works !!! i (julia) am so smart :D
   }
 
-//roller motor movement
-  if (Controller1.ButtonB.pressing()) {
-    Rollers.spin(forward, 30, rpm);
-  } else if (Controller1.ButtonX.pressing()) {
-    Rollers.spin(reverse, 30, rpm);
-  } else {
-    Rollers.stop(hold);
-  }
-
-  if (Controller1.ButtonA.pressing()) {
-    Intake.spin(forward, 60, rpm);
-  } else if (Controller1.ButtonY.pressing()) {
-    Intake.spin(reverse, 60, rpm);
-  } else {
-    Intake.stop(hold);
-  }
-
 }
 
 void usercontrol(void) {
@@ -130,6 +185,21 @@ void usercontrol(void) {
     // update your motors, etc.
     // ........................................................................
     driverControl();
+
+    //roller motor movement
+    spinRollers();
+
+    spinIntakeAndRollers();
+
+    if (spinFlywheel) {
+      FlywheelSparkly.spin(forward, flywheelSpeed, rpm);
+      FlywheelNonSparkly.spin(forward, flywheelSpeed, rpm);
+    } else {
+      FlywheelSparkly.stop();
+      FlywheelNonSparkly.stop();
+    }
+
+    //shootDisks();
 
     wait(20, msec); // Sleep the task for a short amount of time to
                     // prevent wasted resources.
