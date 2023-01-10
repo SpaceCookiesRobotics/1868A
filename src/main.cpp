@@ -59,6 +59,42 @@ void pre_auton(void) {
 /*---------------------------------------------------------------------------*/
 
 void autonomous(void) {
+  FrontLeft.spinFor(forward, 280, degrees, false);
+  FrontRight.spinFor(forward, 280, degrees, false);
+  BackLeft.spinFor(forward, 280, degrees, false);
+  BackRight.spinFor(forward, 280, degrees, false);
+  Rollers.spinFor(forward, 100, degrees); // roll the roller to desired color
+
+  wait(3000, msec);
+
+  FrontLeft.spinFor(reverse, 360 * 20, degrees, false); // back up
+  FrontRight.spinFor(reverse, 360 * 20, degrees, false);
+  BackLeft.spinFor(reverse, 360 * 20, degrees, false);
+  BackRight.spinFor(reverse, 360 * 20, degrees, false);
+
+  FlywheelSparkly.spinFor(forward, 360 * 600, degrees,false);
+  FlywheelNonSparkly.spinFor(forward, 360 * 600, degrees,false);
+
+  wait(1000,msec);
+
+  FrontLeft.spinFor(forward, 360*20, degrees, false); // turning 90 degrees to the right
+  //FrontRight.spinFor(reverse, 360*20, degrees, false);
+  BackLeft.spinFor(forward, 360*20, degrees, false);
+  //BackRight.spinFor(reverse, 360*20, degrees, false);
+
+  wait(1000, msec);
+
+  FrontLeft.spinFor(reverse, 360 * 75, degrees, false); // going to goal
+  FrontRight.spinFor(reverse, 360 * 75, degrees, false);
+  BackLeft.spinFor(reverse, 360 * 75, degrees, false);
+  BackRight.spinFor(reverse, 360 * 75, degrees);
+
+  wait(1000, msec);
+
+  Intake.spinFor(forward, 2000, degrees, false);
+  
+
+
   // ..........................................................................
   // Insert autonomous user code here.
   // ..........................................................................
@@ -115,7 +151,7 @@ void dontSpinFlywheel() {
   spinFlywheel = false;
 }
 
-void spinIntakeAndRollers() {
+void spinIntakeAndFlywheel() {
     if (Controller1.ButtonA.pressing()) {
       Intake.spin(forward, intakeSpeed, rpm);
     } else if (Controller1.ButtonY.pressing()) {
@@ -163,10 +199,10 @@ void driverControl() {
     BackRight.stop(hold);
     
   } else {
-    FrontLeft.spin(forward, 0.75 * (forwardVal + sidewaysVal + turnVal), percent);
-    FrontRight.spin(forward, 0.75 * (forwardVal - sidewaysVal - turnVal), percent);
-    BackLeft.spin(forward, 0.75 * (forwardVal - sidewaysVal + turnVal), percent);
-    BackRight.spin(forward, 0.75 * (forwardVal + sidewaysVal - turnVal), percent);
+    FrontLeft.spin(forward, (forwardVal + sidewaysVal + turnVal), percent);
+    FrontRight.spin(forward, (forwardVal - sidewaysVal - turnVal), percent);
+    BackLeft.spin(forward, (forwardVal - sidewaysVal + turnVal), percent);
+    BackRight.spin(forward, (forwardVal + sidewaysVal - turnVal), percent);
     // 12/08 negated turnVal because axis 1 was coded backwards. hope it works lol
     // update ehehe it works !!! i (julia) am so smart :D
   }
@@ -189,7 +225,7 @@ void usercontrol(void) {
     //roller motor movement
     spinRollers();
 
-    spinIntakeAndRollers();
+    spinIntakeAndFlywheel();
 
     if (spinFlywheel) {
       FlywheelSparkly.spin(forward, flywheelSpeed, rpm);
