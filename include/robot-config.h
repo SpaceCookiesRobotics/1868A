@@ -12,6 +12,10 @@ extern motor Rollers;
 extern motor Intake;
 extern motor FlywheelNonSparkly;
 extern motor FlywheelSparkly;
+extern limit JumperA;
+extern limit JumperB;
+extern limit JumperC;
+extern limit JumperD;
 
 /**
  * Used to initialize code/tasks/devices added using tools in VEXcode Pro.

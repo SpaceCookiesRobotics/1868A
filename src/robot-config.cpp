@@ -17,6 +17,10 @@ motor Rollers = motor(PORT11, ratio36_1, false);
 motor Intake = motor(PORT12, ratio18_1, false);
 motor FlywheelNonSparkly = motor(PORT13, ratio6_1, false);
 motor FlywheelSparkly = motor(PORT14, ratio6_1, true);
+limit JumperA = limit(Brain.ThreeWirePort.A);
+limit JumperB = limit(Brain.ThreeWirePort.B);
+limit JumperC = limit(Brain.ThreeWirePort.C);
+limit JumperD = limit(Brain.ThreeWirePort.D);
 
 // VEXcode generated functions
 // define variable for remote controller enable/disable
