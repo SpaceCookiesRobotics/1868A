@@ -344,6 +344,7 @@ int main() {
   //Competition.autonomous(autonomous);
 
   Competition.drivercontrol(usercontrol);
+  // THIS IS THE CHANGE IM MAKING!
 
   // Run the pre-autonomous function.
   pre_auton();
